@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patitas Sanas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/estilos.css') }}">
+</head>
+<body>
+    <div class="page-shell">
+        <header class="mockup-header">Centro Veterinario PatitasSanas</header>
+
+        <main class="mockup-main">
+            <h2 class="section-title">Registro de nuevo paciente</h2>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class="flash-list">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('agregar') }}" class="patient-form">
+                <div class="field-row">
+                    <label for="nombre">Nombre de la mascota:</label>
+                    <input id="nombre" type="text" name="nombre" required>
+                </div>
+
+                <div class="field-row">
+                    <label for="especie">Especie:</label>
+                    <input id="especie" type="text" name="especie" required>
+                </div>
+
+                <div class="field-row">
+                    <label for="edad">Edad:</label>
+                    <input id="edad" type="number" name="edad" min="0" value="0">
+                </div>
+
+                <div class="field-row">
+                    <label for="nombre_propietario">Nombre del propietario:</label>
+                    <input id="nombre_propietario" type="text" name="nombre_propietario">
+                </div>
+
+                <div class="field-row">
+                    <label for="telefono_propietario">Teléfono del propietario:</label>
+                    <input id="telefono_propietario" type="text" name="telefono_propietario">
+                </div>
+
+                <div class="button-row">
+                    <button type="submit">Registrar paciente</button>
+                </div>
+            </form>
+
+            <h3 class="table-title">Pacientes registrados</h3>
+
+            {% if mascotas %}
+                <div class="records-wrap">
+                    <div class="records-header">
+                        <span>ID</span>
+                        <span>Nombre mascota</span>
+                        <span>Especie</span>
+                        <span>Edad</span>
+                        <span>Propietario</span>
+                        <span>Tel.</span>
+                        <span>Acción</span>
+                    </div>
+
+                    {% for mascota in mascotas %}
+                        <div class="records-row">
+                            <span>{{ mascota.id }}</span>
+                            <span>{{ mascota.nombre }}</span>
+                            <span>{{ mascota.especie }}</span>
+                            <span>{{ mascota.edad }}</span>
+                            <span>{{ mascota.nombre_propietario or 'Sin propietario' }}</span>
+                            <span>{{ mascota.telefono_propietario or '---' }}</span>
+                            <span>
+                                <form method="POST" action="{{ url_for('eliminar', id=mascota.id) }}">
+                                    <button class="danger" type="submit">[Eliminar]</button>
+                                </form>
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty">No hay pacientes registrados.</p>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>
